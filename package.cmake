@@ -58,6 +58,7 @@ install(
         .
     COMPONENT
         CNPM_RUNTIME
+    EXCLUDE_FROM_ALL
 )
 
 
