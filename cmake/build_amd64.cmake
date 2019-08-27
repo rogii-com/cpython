@@ -21,10 +21,17 @@ set(
     amd64
 )
 
-set(
-    BUILD_ARCH
-    x64
-)
+if(WIN32)
+    set(
+        BUILD_ARCH
+        x64
+    )
+elseif(UNIX)
+    set(
+        BUILD_ARCH
+        64-bit
+    )
+endif()
 
 set(
 	FOLDER_ARCH

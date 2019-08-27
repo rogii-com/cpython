@@ -90,7 +90,7 @@ CONFIGURE_CFLAGS_NODIST=@CFLAGS_NODIST@
 # once Python is installed (bpo-35257)
 CONFIGURE_LDFLAGS_NODIST=@LDFLAGS_NODIST@
 CONFIGURE_CPPFLAGS=	@CPPFLAGS@
-CONFIGURE_LDFLAGS=	@LDFLAGS@
+CONFIGURE_LDFLAGS=	@LDFLAGS@ -Wl,--enable-new-dtags -Wl,-rpath,\$$ORIGIN/ -Wl,-rpath,\$$ORIGIN/../lib
 # Avoid assigning CFLAGS, LDFLAGS, etc. so users can use them on the
 # command line to append to these values without stomping the pre-set
 # values.
