@@ -21,10 +21,17 @@ set(
     x86
 )
 
-set(
-    BUILD_ARCH
-    win32
-)
+if(WIN32)
+    set(
+        BUILD_ARCH
+        win32
+    )
+elseif(UNIX)
+    set(
+        BUILD_ARCH
+        32-bit
+    )
+endif()
 
 set(
 	FOLDER_ARCH

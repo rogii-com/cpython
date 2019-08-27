@@ -82,11 +82,10 @@ set(
     "-v:n"
 )
 
-message (
-	"cmd /C ${BUILD_DIRECTORY}\\build.bat -c Release -p ${BUILD_ARCH}"
-)
-
 if(WIN32)
+    message (
+        "cmd /C ${BUILD_DIRECTORY}\\build.bat -c Release -p ${BUILD_ARCH}"
+    )
     execute_process(
         COMMAND
             cmd /C "${BUILD_DIRECTORY}/build.bat -c Release -p ${BUILD_ARCH} ${MSBUILD_PARAMS}"
@@ -101,7 +100,28 @@ if(WIN32)
     )
 	
 elseif(UNIX)
-
+    set(
+        ENV{CFLAGS}
+        -O2 -ggdb
+    )
+    execute_process(
+        COMMAND
+            ./configure --prefix=${CMAKE_INSTALL_PREFIX} --enable-shared --with-system-expat=no --with-system-ffi=no --with-system-libmpdec=no --with-universal-archs=${BUILD_ARCH}
+        WORKING_DIRECTORY
+            "${CMAKE_CURRENT_SOURCE_DIR}"
+    )
+    execute_process(
+        COMMAND
+            make
+        WORKING_DIRECTORY
+            "${CMAKE_CURRENT_SOURCE_DIR}"
+    )
+    execute_process(
+        COMMAND
+            make install
+        WORKING_DIRECTORY
+            "${CMAKE_CURRENT_SOURCE_DIR}"
+    )
 endif()
 
 if(DEFINED ENV{TAG})
@@ -111,42 +131,64 @@ if(DEFINED ENV{TAG})
     )
 endif()
 
-execute_process(
-	COMMAND
-	    "${BUILD_DIRECTORY}/${FOLDER_ARCH}/python.exe" mkstd.py
-	WORKING_DIRECTORY
-	    "${CMAKE_CURRENT_LIST_DIR}/.."
-)
-
-execute_process(
-	COMMAND
-	    7z.exe a -r -tzip ../python37.zip *.pyc -x!__pycache__ -x!test -x!ensurepip -x!idlelib -x!venv -x!tests -x!tkinter -x!turtle* -aou
-	WORKING_DIRECTORY
-	    "${CMAKE_CURRENT_LIST_DIR}/../Lib"
-)
+if(WIN32)
+    execute_process(
+        COMMAND
+            "${BUILD_DIRECTORY}/${FOLDER_ARCH}/python.exe" mkstd.py
+        WORKING_DIRECTORY
+            "${CMAKE_CURRENT_LIST_DIR}/.."
+    )
+    execute_process(
+    	COMMAND
+    	    7z.exe a -r -tzip ../python37.zip *.pyc -x!__pycache__ -x!test -x!ensurepip -x!idlelib -x!venv -x!tests -x!tkinter -x!turtle* -aou
+    	WORKING_DIRECTORY
+    	    "${CMAKE_CURRENT_LIST_DIR}/../Lib"
+    )
+    file(
+        COPY
+            python37.zip
+        DESTINATION
+            "${CMAKE_INSTALL_PREFIX}"
+    )
+elseif(UNIX)
+    #TODO: implement me
+endif()
 
 file(
     COPY
         package.cmake
-	python37.zip
     DESTINATION
-        "${ROOT}/${PACKAGE_NAME}"
+        "${CMAKE_INSTALL_PREFIX}"
 )
 
-file(
-    COPY
-        Include/
-		PC/pyconfig.h
-    DESTINATION
-        "${ROOT}/${PACKAGE_NAME}/include"
-)
-
-file(
-    COPY
-        ${BUILD_DIRECTORY}/${FOLDER_ARCH}/
-    DESTINATION
-        "${ROOT}/${PACKAGE_NAME}/bin"
-)
+if(WIN32)
+    file(
+        COPY
+            Include/
+    		PC/pyconfig.h
+        DESTINATION
+            "${ROOT}/${PACKAGE_NAME}/include"
+    )
+    file(
+        COPY
+            ${BUILD_DIRECTORY}/${FOLDER_ARCH}/
+        DESTINATION
+            "${ROOT}/${PACKAGE_NAME}/bin"
+    )
+elseif(UNIX)
+    execute_process(
+        COMMAND
+            chmod +w ${ROOT}/${PACKAGE_NAME}/lib/libpython3.7m.so.1.0
+        COMMAND
+            chmod +w ${ROOT}/${PACKAGE_NAME}/lib/libpython3.so
+        COMMAND
+            ./utils/split_debug_info.sh ${ROOT}/${PACKAGE_NAME}/lib/libpython3.7m.so.1.0
+        COMMAND
+            ./utils/split_debug_info.sh ${ROOT}/${PACKAGE_NAME}/lib/libpython3.so
+        WORKING_DIRECTORY
+            "${CMAKE_CURRENT_LIST_DIR}"
+    )
+endif()
 
 execute_process(
     COMMAND
