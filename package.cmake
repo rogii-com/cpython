@@ -1,27 +1,32 @@
 if(TARGET Python::library)
-    return()
+	return()
 endif()
 
 add_library(
-    Python::library
-    SHARED
-    IMPORTED
+	Python::library
+	SHARED
+	IMPORTED
+)
+add_library(
+	Python::legacy
+	SHARED
+	IMPORTED
 )
 
 if(WIN32)
 	set_target_properties(
-	    Python::library
-	    PROPERTIES
-		    IMPORTED_LOCATION
-	            "${CMAKE_CURRENT_LIST_DIR}/bin/python37.dll"
-	        IMPORTED_LOCATION_DEBUG
-	            "${CMAKE_CURRENT_LIST_DIR}/bin/python37.dll"
-	        IMPORTED_IMPLIB
-	            "${CMAKE_CURRENT_LIST_DIR}/bin/python37.lib"
-	        IMPORTED_IMPLIB_DEBUG
-	            "${CMAKE_CURRENT_LIST_DIR}/bin/python37.lib"
-	        INTERFACE_INCLUDE_DIRECTORIES
-	            "${CMAKE_CURRENT_LIST_DIR}/include"
+		Python::library
+		PROPERTIES
+			IMPORTED_LOCATION
+				"${CMAKE_CURRENT_LIST_DIR}/bin/python37.dll"
+			IMPORTED_LOCATION_DEBUG
+				"${CMAKE_CURRENT_LIST_DIR}/bin/python37.dll"
+			IMPORTED_IMPLIB
+				"${CMAKE_CURRENT_LIST_DIR}/bin/python37.lib"
+			IMPORTED_IMPLIB_DEBUG
+				"${CMAKE_CURRENT_LIST_DIR}/bin/python37.lib"
+			INTERFACE_INCLUDE_DIRECTORIES
+				"${CMAKE_CURRENT_LIST_DIR}/include"
 	)
 
 	link_directories(${CMAKE_CURRENT_LIST_DIR}/bin)
@@ -29,7 +34,7 @@ if(WIN32)
 	set (PYTHON_LIB ${CMAKE_CURRENT_LIST_DIR}/python37.zip)
 
 	install(
-	    FILES
+		FILES
 			${PYTHON_LIB}
 			${PYTHON_BINDIR}/python37.dll
 			${PYTHON_BINDIR}/python3.dll
@@ -55,24 +60,68 @@ if(WIN32)
 			${PYTHON_BINDIR}/sqlite3.dll
 			${PYTHON_BINDIR}/tcl86t.dll
 			${PYTHON_BINDIR}/tk86t.dll
-	    DESTINATION
-	        .
-	    COMPONENT
-	        CNPM_RUNTIME
-	    EXCLUDE_FROM_ALL
+		DESTINATION
+			.
+		COMPONENT
+			CNPM_RUNTIME
+		EXCLUDE_FROM_ALL
 	)
 elseif(UNIX)
 	set_target_properties(
-	    Python::library
-	    PROPERTIES
-		    IMPORTED_LOCATION
-	            "${CMAKE_CURRENT_LIST_DIR}/lib/libpython3.7m.so.1.0"
-	        IMPORTED_LOCATION_DEBUG
-	            "${CMAKE_CURRENT_LIST_DIR}/lib/libpython3.7m.so.1.0"
-	        INTERFACE_INCLUDE_DIRECTORIES
-	            "${CMAKE_CURRENT_LIST_DIR}/include"
+		Python::library
+		PROPERTIES
+			IMPORTED_LOCATION
+				"${CMAKE_CURRENT_LIST_DIR}/lib/libpython3.7m.so.1.0"
+			INTERFACE_INCLUDE_DIRECTORIES
+				"${CMAKE_CURRENT_LIST_DIR}/include/python3.7m"
 	)
+	set(
+		COMPONENT_NAMES
+
+		CNPM_RUNTIME_Python_lybrary
+		CNPM_RUNTIME_Python
+		CNPM_RUNTIME
+	)
+
+	foreach(COMPONENT_NAME ${COMPONENT_NAMES})
+		install(
+			FILES
+				$<TARGET_FILE:Python::library>
+			DESTINATION
+				.
+			COMPONENT
+				${COMPONENT_NAME}
+			EXCLUDE_FROM_ALL
+		)
+    endforeach()
+
+	set_target_properties(
+		Python::legacy
+		PROPERTIES
+			IMPORTED_LOCATION
+				"${CMAKE_CURRENT_LIST_DIR}/lib/libpython3.so"
+			INTERFACE_INCLUDE_DIRECTORIES
+				"${CMAKE_CURRENT_LIST_DIR}/include/python3.7m"
+	)
+	set(
+		COMPONENT_NAMES
+
+		CNPM_RUNTIME_Python_legacy
+		CNPM_RUNTIME_Python
+		CNPM_RUNTIME
+	)
+
+	foreach(COMPONENT_NAME ${COMPONENT_NAMES})
+		install(
+			FILES
+				$<TARGET_FILE:Python::library>
+				$<TARGET_FILE:Python::legacy>
+			DESTINATION
+				.
+			COMPONENT
+				${COMPONENT_NAME}
+			EXCLUDE_FROM_ALL
+		)
+	endforeach()
+
 endif()
-
-
-

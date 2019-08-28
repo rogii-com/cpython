@@ -77,12 +77,11 @@ set(
     ${ROOT}/${PACKAGE_NAME}
 )
 
-set(
-    MSBUILD_PARAMS
-    "-v:n"
-)
-
 if(WIN32)
+    set(
+        MSBUILD_PARAMS
+        "-v:n"
+    )
     message (
         "cmd /C ${BUILD_DIRECTORY}\\build.bat -c Release -p ${BUILD_ARCH}"
     )
@@ -139,10 +138,10 @@ if(WIN32)
             "${CMAKE_CURRENT_LIST_DIR}/.."
     )
     execute_process(
-    	COMMAND
-    	    7z.exe a -r -tzip ../python37.zip *.pyc -x!__pycache__ -x!test -x!ensurepip -x!idlelib -x!venv -x!tests -x!tkinter -x!turtle* -aou
-    	WORKING_DIRECTORY
-    	    "${CMAKE_CURRENT_LIST_DIR}/../Lib"
+        COMMAND
+            7z.exe a -r -tzip ../python37.zip *.pyc -x!__pycache__ -x!test -x!ensurepip -x!idlelib -x!venv -x!tests -x!tkinter -x!turtle* -aou
+        WORKING_DIRECTORY
+            "${CMAKE_CURRENT_LIST_DIR}/../Lib"
     )
     file(
         COPY
@@ -151,7 +150,7 @@ if(WIN32)
             "${CMAKE_INSTALL_PREFIX}"
     )
 elseif(UNIX)
-    #TODO: implement me
+    message(WARNING "TODO: implement me")
 endif()
 
 file(
@@ -165,7 +164,7 @@ if(WIN32)
     file(
         COPY
             Include/
-    		PC/pyconfig.h
+            PC/pyconfig.h
         DESTINATION
             "${ROOT}/${PACKAGE_NAME}/include"
     )
@@ -181,10 +180,22 @@ elseif(UNIX)
             chmod +w ${ROOT}/${PACKAGE_NAME}/lib/libpython3.7m.so.1.0
         COMMAND
             chmod +w ${ROOT}/${PACKAGE_NAME}/lib/libpython3.so
+        WORKING_DIRECTORY
+            "${CMAKE_CURRENT_LIST_DIR}"
+    )
+    execute_process(
         COMMAND
             ./utils/split_debug_info.sh ${ROOT}/${PACKAGE_NAME}/lib/libpython3.7m.so.1.0
         COMMAND
             ./utils/split_debug_info.sh ${ROOT}/${PACKAGE_NAME}/lib/libpython3.so
+        WORKING_DIRECTORY
+            "${CMAKE_CURRENT_LIST_DIR}"
+    )
+    execute_process(
+        COMMAND
+            chmod -w ${ROOT}/${PACKAGE_NAME}/lib/libpython3.7m.so.1.0
+        COMMAND
+            chmod -w ${ROOT}/${PACKAGE_NAME}/lib/libpython3.so
         WORKING_DIRECTORY
             "${CMAKE_CURRENT_LIST_DIR}"
     )
