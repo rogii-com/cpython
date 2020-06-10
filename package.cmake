@@ -56,16 +56,30 @@ if(WIN32)
 			${PYTHON_BINDIR}/_sqlite3.pyd
 			${PYTHON_BINDIR}/_ssl.pyd
 			${PYTHON_BINDIR}/_tkinter.pyd
+			${PYTHON_BINDIR}/_queue.pyd
 			${PYTHON_BINDIR}/pyshellext.dll
 			${PYTHON_BINDIR}/sqlite3.dll
 			${PYTHON_BINDIR}/tcl86t.dll
 			${PYTHON_BINDIR}/tk86t.dll
+			${PYTHON_BINDIR}/libcrypto-1_1.dll
+			${PYTHON_BINDIR}/libssl-1_1.dll
+			${PYTHON_BINDIR}/python.exe
 		DESTINATION
 			.
 		COMPONENT
 			CNPM_RUNTIME
 		EXCLUDE_FROM_ALL
 	)
+	install(
+		DIRECTORY
+			tcl
+		DESTINATION
+			python
+		COMPONENT
+			CNPM_RUNTIME
+		EXCLUDE_FROM_ALL
+	)
+
 elseif(UNIX)
 	set_target_properties(
 		Python::library
