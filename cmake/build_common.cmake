@@ -137,12 +137,6 @@ if(WIN32)
         WORKING_DIRECTORY
             "${CMAKE_CURRENT_LIST_DIR}/.."
     )
-    execute_process(
-        COMMAND
-            7z.exe a -r -tzip ../python37.zip *.pyc -x!__pycache__ -x!test -x!ensurepip -x!idlelib -x!venv -x!tests -x!tkinter -x!turtle* -aou
-        WORKING_DIRECTORY
-            "${CMAKE_CURRENT_LIST_DIR}/../Lib"
-    )
     file(
         COPY
             python37.zip
@@ -174,6 +168,15 @@ if(WIN32)
         DESTINATION
             "${ROOT}/${PACKAGE_NAME}/bin"
     )
+    file(
+        COPY
+             externals/tcltk-8.6.9.0/${FOLDER_ARCH}/lib/tcl8.6
+             externals/tcltk-8.6.9.0/${FOLDER_ARCH}/lib/tk8.6
+             externals/tcltk-8.6.9.0/${FOLDER_ARCH}/lib/tix8.4.3
+        DESTINATION
+            "${ROOT}/${PACKAGE_NAME}/tcl"
+    )
+
 elseif(UNIX)
     execute_process(
         COMMAND
