@@ -109,7 +109,7 @@ elseif(UNIX)
     )
     execute_process(
         COMMAND
-            ./configure --prefix=${CMAKE_INSTALL_PREFIX} --enable-shared --with-system-expat=no --with-system-ffi=no --with-system-libmpdec=no --with-universal-archs=${BUILD_ARCH}
+            ./configure --prefix=${CMAKE_INSTALL_PREFIX} --enable-shared --with-system-ffi=no --with-system-libmpdec=no --with-universal-archs=${BUILD_ARCH}
         WORKING_DIRECTORY
             "${CMAKE_CURRENT_SOURCE_DIR}"
     )
