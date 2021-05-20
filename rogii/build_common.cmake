@@ -50,18 +50,6 @@ else()
     endif()
 endif()
 
-if(WIN32)
-    set(
-        TOOLSET
-        "msvc-14.0"
-    )
-elseif(UNIX)
-    set(
-        TOOLSET
-        "gcc"
-    )
-endif()
-
 include(
     "${CMAKE_CURRENT_LIST_DIR}/Version.cmake"
 )
