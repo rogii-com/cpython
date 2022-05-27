@@ -1,0 +1,14 @@
+set(
+    MSVS_YEAR_VERSION
+    2019
+)
+
+set(
+    MSVS_VCTOOLS_VERSION
+    14.27.29110
+)
+
+set(
+    MSVS_SDK_VERSION
+    10.0.18362.0
+)

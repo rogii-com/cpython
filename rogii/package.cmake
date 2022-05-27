@@ -33,39 +33,49 @@ if(WIN32)
 	set (PYTHON_BINDIR ${CMAKE_CURRENT_LIST_DIR}/bin/)
 	set (PYTHON_LIB ${CMAKE_CURRENT_LIST_DIR}/python37.zip)
 
-	install(
-		FILES
-			${PYTHON_LIB}
-			${PYTHON_BINDIR}/python37.dll
-			${PYTHON_BINDIR}/python3.dll
-			${PYTHON_BINDIR}/pyexpat.pyd
-			${PYTHON_BINDIR}/select.pyd
-			${PYTHON_BINDIR}/unicodedata.pyd
-			${PYTHON_BINDIR}/winsound.pyd
-			${PYTHON_BINDIR}/xxlimited.pyd
-			${PYTHON_BINDIR}/_asyncio.pyd
-			${PYTHON_BINDIR}/_bz2.pyd
-			${PYTHON_BINDIR}/_ctypes.pyd
-			${PYTHON_BINDIR}/_elementtree.pyd
-			${PYTHON_BINDIR}/_hashlib.pyd
-			${PYTHON_BINDIR}/_lzma.pyd
-			${PYTHON_BINDIR}/_msi.pyd
-			${PYTHON_BINDIR}/_multiprocessing.pyd
-			${PYTHON_BINDIR}/_overlapped.pyd
-			${PYTHON_BINDIR}/_socket.pyd
-			${PYTHON_BINDIR}/_sqlite3.pyd
-			${PYTHON_BINDIR}/_ssl.pyd
-			${PYTHON_BINDIR}/_tkinter.pyd
-			${PYTHON_BINDIR}/pyshellext.dll
-			${PYTHON_BINDIR}/sqlite3.dll
-			${PYTHON_BINDIR}/tcl86t.dll
-			${PYTHON_BINDIR}/tk86t.dll
-		DESTINATION
-			.
-		COMPONENT
-			CNPM_RUNTIME
-		EXCLUDE_FROM_ALL
+	set(
+		COMPONENT_NAMES
+
+		CNPM_RUNTIME_Python_lybrary
+		CNPM_RUNTIME_Python
+		CNPM_RUNTIME
 	)
+
+	foreach(COMPONENT_NAME ${COMPONENT_NAMES})
+		install(
+			FILES
+				${PYTHON_LIB}
+				${PYTHON_BINDIR}/python37.dll
+				${PYTHON_BINDIR}/python3.dll
+				${PYTHON_BINDIR}/pyexpat.pyd
+				${PYTHON_BINDIR}/select.pyd
+				${PYTHON_BINDIR}/unicodedata.pyd
+				${PYTHON_BINDIR}/winsound.pyd
+				${PYTHON_BINDIR}/xxlimited.pyd
+				${PYTHON_BINDIR}/_asyncio.pyd
+				${PYTHON_BINDIR}/_bz2.pyd
+				${PYTHON_BINDIR}/_ctypes.pyd
+				${PYTHON_BINDIR}/_elementtree.pyd
+				${PYTHON_BINDIR}/_hashlib.pyd
+				${PYTHON_BINDIR}/_lzma.pyd
+				${PYTHON_BINDIR}/_msi.pyd
+				${PYTHON_BINDIR}/_multiprocessing.pyd
+				${PYTHON_BINDIR}/_overlapped.pyd
+				${PYTHON_BINDIR}/_socket.pyd
+				${PYTHON_BINDIR}/_sqlite3.pyd
+				${PYTHON_BINDIR}/_ssl.pyd
+				${PYTHON_BINDIR}/_tkinter.pyd
+				${PYTHON_BINDIR}/pyshellext.dll
+				${PYTHON_BINDIR}/sqlite3.dll
+				${PYTHON_BINDIR}/tcl86t.dll
+				${PYTHON_BINDIR}/tk86t.dll
+			DESTINATION
+				.
+			COMPONENT
+				${COMPONENT_NAME}
+			EXCLUDE_FROM_ALL
+		)
+	endforeach()
 elseif(UNIX)
 	set_target_properties(
 		Python::library
