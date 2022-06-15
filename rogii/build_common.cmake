@@ -145,7 +145,7 @@ if(WIN32)
     )
     file(
         COPY
-            python37.zip
+            python310.zip
         DESTINATION
             "${CMAKE_INSTALL_PREFIX}"
     )
