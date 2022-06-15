@@ -133,7 +133,7 @@ endif()
 if(WIN32)
     execute_process(
         COMMAND
-            "${BUILD_DIRECTORY}/${FOLDER_ARCH}/python.exe" mkstd.py
+            "${BUILD_DIRECTORY}/${FOLDER_ARCH}/python.exe" ${CMAKE_CURRENT_LIST_DIR}/mkstd.py
         WORKING_DIRECTORY
             "${CMAKE_CURRENT_LIST_DIR}/.."
     )
