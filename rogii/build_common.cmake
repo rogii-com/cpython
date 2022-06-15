@@ -133,13 +133,13 @@ endif()
 if(WIN32)
     execute_process(
         COMMAND
-            "${BUILD_DIRECTORY}/${FOLDER_ARCH}/python.exe" ${CMAKE_CURRENT_LIST_DIR}/mkstd.py
+            "${BUILD_DIRECTORY}/${FOLDER_ARCH}/python.exe" mkstd.py
         WORKING_DIRECTORY
-            "${CMAKE_CURRENT_LIST_DIR}/.."
+            "${CMAKE_CURRENT_LIST_DIR}"
     )
     execute_process(
         COMMAND
-            7z.exe a -r -tzip ../python37.zip *.pyc -x!__pycache__ -x!test -x!ensurepip -x!idlelib -x!venv -x!tests -x!tkinter -x!turtle* -aou
+            7z.exe a -r -tzip ../python310.zip *.pyc -x!__pycache__ -x!test -x!ensurepip -x!idlelib -x!venv -x!tests -x!tkinter -x!turtle* -aou
         WORKING_DIRECTORY
             "${CMAKE_CURRENT_LIST_DIR}/../Lib"
     )
@@ -177,7 +177,7 @@ if(WIN32)
 elseif(UNIX)
     execute_process(
         COMMAND
-            chmod +w ${ROOT}/${PACKAGE_NAME}/lib/libpython3.7m.so.1.0
+            chmod +w ${ROOT}/${PACKAGE_NAME}/lib/libpython3.10m.so.1.0
         COMMAND
             chmod +w ${ROOT}/${PACKAGE_NAME}/lib/libpython3.so
         WORKING_DIRECTORY
@@ -185,7 +185,7 @@ elseif(UNIX)
     )
     execute_process(
         COMMAND
-            ./utils/split_debug_info.sh ${ROOT}/${PACKAGE_NAME}/lib/libpython3.7m.so.1.0
+            ./utils/split_debug_info.sh ${ROOT}/${PACKAGE_NAME}/lib/libpython3.10m.so.1.0
         COMMAND
             ./utils/split_debug_info.sh ${ROOT}/${PACKAGE_NAME}/lib/libpython3.so
         WORKING_DIRECTORY
@@ -193,7 +193,7 @@ elseif(UNIX)
     )
     execute_process(
         COMMAND
-            chmod -w ${ROOT}/${PACKAGE_NAME}/lib/libpython3.7m.so.1.0
+            chmod -w ${ROOT}/${PACKAGE_NAME}/lib/libpython3.10m.so.1.0
         COMMAND
             chmod -w ${ROOT}/${PACKAGE_NAME}/lib/libpython3.so
         WORKING_DIRECTORY
