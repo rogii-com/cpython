@@ -18,20 +18,20 @@ if(WIN32)
 		Python::library
 		PROPERTIES
 			IMPORTED_LOCATION
-				"${CMAKE_CURRENT_LIST_DIR}/bin/python37.dll"
+				"${CMAKE_CURRENT_LIST_DIR}/bin/python310.dll"
 			IMPORTED_LOCATION_DEBUG
-				"${CMAKE_CURRENT_LIST_DIR}/bin/python37.dll"
+				"${CMAKE_CURRENT_LIST_DIR}/bin/python310.dll"
 			IMPORTED_IMPLIB
-				"${CMAKE_CURRENT_LIST_DIR}/bin/python37.lib"
+				"${CMAKE_CURRENT_LIST_DIR}/bin/python310.lib"
 			IMPORTED_IMPLIB_DEBUG
-				"${CMAKE_CURRENT_LIST_DIR}/bin/python37.lib"
+				"${CMAKE_CURRENT_LIST_DIR}/bin/python310.lib"
 			INTERFACE_INCLUDE_DIRECTORIES
 				"${CMAKE_CURRENT_LIST_DIR}/include"
 	)
 
 	link_directories(${CMAKE_CURRENT_LIST_DIR}/bin)
 	set (PYTHON_BINDIR ${CMAKE_CURRENT_LIST_DIR}/bin/)
-	set (PYTHON_LIB ${CMAKE_CURRENT_LIST_DIR}/python37.zip)
+	set (PYTHON_LIB ${CMAKE_CURRENT_LIST_DIR}/python310.zip)
 
 	set(
 		COMPONENT_NAMES
@@ -45,7 +45,7 @@ if(WIN32)
 		install(
 			FILES
 				${PYTHON_LIB}
-				${PYTHON_BINDIR}/python37.dll
+				${PYTHON_BINDIR}/python310.dll
 				${PYTHON_BINDIR}/python3.dll
 				${PYTHON_BINDIR}/pyexpat.pyd
 				${PYTHON_BINDIR}/select.pyd
@@ -81,9 +81,9 @@ elseif(UNIX)
 		Python::library
 		PROPERTIES
 			IMPORTED_LOCATION
-				"${CMAKE_CURRENT_LIST_DIR}/lib/libpython3.7m.so.1.0"
+				"${CMAKE_CURRENT_LIST_DIR}/lib/libpython3.10m.so.1.0"
 			INTERFACE_INCLUDE_DIRECTORIES
-				"${CMAKE_CURRENT_LIST_DIR}/include/python3.7m"
+				"${CMAKE_CURRENT_LIST_DIR}/include/python3.10m"
 	)
 	set(
 		COMPONENT_NAMES
@@ -111,7 +111,7 @@ elseif(UNIX)
 			IMPORTED_LOCATION
 				"${CMAKE_CURRENT_LIST_DIR}/lib/libpython3.so"
 			INTERFACE_INCLUDE_DIRECTORIES
-				"${CMAKE_CURRENT_LIST_DIR}/include/python3.7m"
+				"${CMAKE_CURRENT_LIST_DIR}/include/python3.10m"
 	)
 	set(
 		COMPONENT_NAMES
