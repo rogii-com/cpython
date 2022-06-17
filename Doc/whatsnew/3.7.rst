@@ -171,7 +171,7 @@ on a per-module basis in Python 3.7 using a :mod:`__future__` import::
 
     from __future__ import annotations
 
-It will become the default in Python 4.0.
+It will become the default in Python 3.10.
 
 .. seealso::
 
@@ -492,6 +492,11 @@ of this mode.
 
 Other Language Changes
 ======================
+
+* An :keyword:`await` expression and comprehensions containing an
+  :keyword:`async for` clause were illegal in the expressions in
+  :ref:`formatted string literals <f-strings>` due to a problem with the
+  implementation.  In Python 3.7 this restriction was lifted.
 
 * More than 255 arguments can now be passed to a function, and a function can
   now have more than 255 parameters. (Contributed by Serhiy Storchaka in
@@ -1720,7 +1725,7 @@ The type of results of :c:func:`PyThread_start_new_thread` and
 (Contributed by Serhiy Storchaka in :issue:`6532`.)
 
 :c:func:`PyUnicode_AsWideCharString` now raises a :exc:`ValueError` if the
-second argument is *NULL* and the :c:type:`wchar_t*` string contains null
+second argument is ``NULL`` and the :c:type:`wchar_t*` string contains null
 characters.  (Contributed by Serhiy Storchaka in :issue:`30708`.)
 
 Changes to the startup sequence and the management of dynamic memory
@@ -2414,6 +2419,10 @@ Changes in the Python API
   instead of a :class:`bytes` instance.
   (Contributed by Victor Stinner in :issue:`21071`.)
 
+* :mod:`argparse` subparsers can now be made mandatory by passing ``required=True``
+  to :meth:`ArgumentParser.add_subparsers() <argparse.ArgumentParser.add_subparsers>`.
+  (Contributed by Anthony Sottile in :issue:`26510`.)
+
 * :meth:`ast.literal_eval()` is now stricter.  Addition and subtraction of
   arbitrary numbers are no longer allowed.
   (Contributed by Serhiy Storchaka in :issue:`31778`.)
@@ -2553,3 +2562,45 @@ This resolves a long standing issue where all virtual environments would have
 to be upgraded or recreated with each Python update. However, note that this
 release will still require recreation of virtual environments in order to get
 the new scripts.
+
+Notable changes in Python 3.7.6
+===============================
+
+Due to significant security concerns, the *reuse_address* parameter of
+:meth:`asyncio.loop.create_datagram_endpoint` is no longer supported. This is
+because of the behavior of the socket option ``SO_REUSEADDR`` in UDP. For more
+details, see the documentation for ``loop.create_datagram_endpoint()``.
+(Contributed by Kyle Stanley, Antoine Pitrou, and Yury Selivanov in
+:issue:`37228`.)
+
+Notable changes in Python 3.7.10
+================================
+
+Earlier Python versions allowed using both ``;`` and ``&`` as
+query parameter separators in :func:`urllib.parse.parse_qs` and
+:func:`urllib.parse.parse_qsl`.  Due to security concerns, and to conform with
+newer W3C recommendations, this has been changed to allow only a single
+separator key, with ``&`` as the default.  This change also affects
+:func:`cgi.parse` and :func:`cgi.parse_multipart` as they use the affected
+functions internally. For more details, please see their respective
+documentation.
+(Contributed by Adam Goldschmidt, Senthil Kumaran and Ken Jin in :issue:`42967`.)
+
+Notable changes in Python 3.7.11
+================================
+
+A security fix alters the :class:`ftplib.FTP` behavior to not trust the
+IPv4 address sent from the remote server when setting up a passive data
+channel.  We reuse the ftp server IP address instead.  For unusual code
+requiring the old behavior, set a ``trust_server_pasv_ipv4_address``
+attribute on your FTP instance to ``True``.  (See :issue:`43285`)
+
+
+The presence of newline or tab characters in parts of a URL allows for some
+forms of attacks. Following the WHATWG specification that updates RFC 3986,
+ASCII newline ``\n``, ``\r`` and tab ``\t`` characters are stripped from the
+URL by the parser :func:`urllib.parse` preventing such attacks. The removal
+characters are controlled by a new module level variable
+``urllib.parse._UNSAFE_URL_BYTES_TO_REMOVE``. (See :issue:`43882`)
+
+

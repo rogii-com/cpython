@@ -28,7 +28,7 @@ Arithmetic conversions
 .. index:: pair: arithmetic; conversion
 
 When a description of an arithmetic operator below uses the phrase "the numeric
-arguments are converted to a common type," this means that the operator
+arguments are converted to a common type", this means that the operator
 implementation for built-in types works as follows:
 
 * If either argument is a complex number, the other is converted to complex;
@@ -148,9 +148,8 @@ immutable, the same rules as for literals apply (i.e., two occurrences of the em
 tuple may or may not yield the same object).
 
 .. index::
-   single: comma; tuple display
-   pair: tuple; display
-   single: , (comma); tuple display
+   single: comma
+   single: , (comma)
 
 Note that tuples are not formed by the parentheses, but rather by use of the
 comma operator.  The exception is the empty tuple, for which parentheses *are*
@@ -1421,8 +1420,9 @@ built-in types.
   The not-a-number values ``float('NaN')`` and ``decimal.Decimal('NaN')`` are
   special.  Any ordered comparison of a number to a not-a-number value is false.
   A counter-intuitive implication is that not-a-number values are not equal to
-  themselves.  For example, if ``x = float('NaN')``, ``3 < x``, ``x < 3``, ``x
-  == x``, ``x != x`` are all false.  This behavior is compliant with IEEE 754.
+  themselves.  For example, if ``x = float('NaN')``, ``3 < x``, ``x < 3`` and
+  ``x == x`` are all false, while ``x != x`` is true.  This behavior is
+  compliant with IEEE 754.
 
 * Binary sequences (instances of :class:`bytes` or :class:`bytearray`) can be
   compared within and across their types.  They compare lexicographically using
@@ -1833,7 +1833,8 @@ precedence and have a left-to-right chaining feature as described in the
 | ``x[index]``, ``x[index:index]``,             | Subscription, slicing,              |
 | ``x(arguments...)``, ``x.attribute``          | call, attribute reference           |
 +-----------------------------------------------+-------------------------------------+
-| ``(expressions...)``,                         | Binding or tuple display,           |
+| ``(expressions...)``,                         | Binding or parenthesized            |
+|                                               | expression,                         |
 | ``[expressions...]``,                         | list display,                       |
 | ``{key: value...}``,                          | dictionary display,                 |
 | ``{expressions...}``                          | set display                         |

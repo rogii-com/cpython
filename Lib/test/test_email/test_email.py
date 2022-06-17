@@ -11,8 +11,8 @@ import textwrap
 from io import StringIO, BytesIO
 from itertools import chain
 from random import choice
-from socket import getfqdn
 from threading import Thread
+from unittest.mock import patch
 
 import email
 import email.policy
@@ -2967,6 +2967,8 @@ class TestMiscellaneous(TestEmailBase):
     def test_parsedate_returns_None_for_invalid_strings(self):
         self.assertIsNone(utils.parsedate(''))
         self.assertIsNone(utils.parsedate_tz(''))
+        self.assertIsNone(utils.parsedate(' '))
+        self.assertIsNone(utils.parsedate_tz(' '))
         self.assertIsNone(utils.parsedate('0'))
         self.assertIsNone(utils.parsedate_tz('0'))
         self.assertIsNone(utils.parsedate('A Complete Waste of Time'))
@@ -3040,6 +3042,20 @@ class TestMiscellaneous(TestEmailBase):
     def test_parseaddr_empty(self):
         self.assertEqual(utils.parseaddr('<>'), ('', ''))
         self.assertEqual(utils.formataddr(utils.parseaddr('<>')), '')
+
+    def test_parseaddr_multiple_domains(self):
+        self.assertEqual(
+            utils.parseaddr('a@b@c'),
+            ('', '')
+        )
+        self.assertEqual(
+            utils.parseaddr('a@b.c@c'),
+            ('', '')
+        )
+        self.assertEqual(
+            utils.parseaddr('a@172.17.0.1@c'),
+            ('', '')
+        )
 
     def test_noquote_dump(self):
         self.assertEqual(
@@ -3328,9 +3344,11 @@ multipart/report
             '.test-idstring@testdomain-string>')
 
     def test_make_msgid_default_domain(self):
-        self.assertTrue(
-            email.utils.make_msgid().endswith(
-                '@' + getfqdn() + '>'))
+        with patch('socket.getfqdn') as mock_getfqdn:
+            mock_getfqdn.return_value = domain = 'pythontest.example.com'
+            self.assertTrue(
+                email.utils.make_msgid().endswith(
+                    '@' + domain + '>'))
 
     def test_Generator_linend(self):
         # Issue 14645.
@@ -5367,6 +5385,27 @@ Content-Type: application/x-foo;
         eq(language, 'en-us')
         eq(s, 'My Document For You')
 
+    def test_should_not_hang_on_invalid_ew_messages(self):
+        messages = ["""From: user@host.com
+To: user@host.com
+Bad-Header:
+ =?us-ascii?Q?LCSwrV11+IB0rSbSker+M9vWR7wEDSuGqmHD89Gt=ea0nJFSaiz4vX3XMJPT4vrE?=
+ =?us-ascii?Q?xGUZeOnp0o22pLBB7CYLH74Js=wOlK6Tfru2U47qR?=
+ =?us-ascii?Q?72OfyEY2p2=2FrA9xNFyvH+fBTCmazxwzF8nGkK6D?=
+
+Hello!
+""", """From: ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ <xxx@xxx>
+To: "xxx" <xxx@xxx>
+Subject:   ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+MIME-Version: 1.0
+Content-Type: text/plain; charset="windows-1251";
+Content-Transfer-Encoding: 8bit
+
+ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+"""]
+        for m in messages:
+            with self.subTest(m=m):
+                msg = email.message_from_string(m)
 
 
 # Tests to ensure that signed parts of an email are completely preserved, as

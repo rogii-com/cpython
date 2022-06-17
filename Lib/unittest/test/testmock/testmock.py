@@ -1,4 +1,5 @@
 import copy
+import re
 import sys
 import tempfile
 
@@ -1314,6 +1315,54 @@ class MockTest(unittest.TestCase):
                         )
 
 
+    def test_assert_has_calls_nested_spec(self):
+        class Something:
+
+            def __init__(self): pass
+            def meth(self, a, b, c, d=None): pass
+
+            class Foo:
+
+                def __init__(self, a): pass
+                def meth1(self, a, b): pass
+
+        mock_class = create_autospec(Something)
+
+        for m in [mock_class, mock_class()]:
+            m.meth(1, 2, 3, d=1)
+            m.assert_has_calls([call.meth(1, 2, 3, d=1)])
+            m.assert_has_calls([call.meth(1, 2, 3, 1)])
+
+        mock_class.reset_mock()
+
+        for m in [mock_class, mock_class()]:
+            self.assertRaises(AssertionError, m.assert_has_calls, [call.Foo()])
+            m.Foo(1).meth1(1, 2)
+            m.assert_has_calls([call.Foo(1), call.Foo(1).meth1(1, 2)])
+            m.Foo.assert_has_calls([call(1), call().meth1(1, 2)])
+
+        mock_class.reset_mock()
+
+        invalid_calls = [call.meth(1),
+                         call.non_existent(1),
+                         call.Foo().non_existent(1),
+                         call.Foo().meth(1, 2, 3, 4)]
+
+        for kall in invalid_calls:
+            self.assertRaises(AssertionError,
+                              mock_class.assert_has_calls,
+                              [kall]
+            )
+
+
+    def test_assert_has_calls_nested_without_spec(self):
+        m = MagicMock()
+        m().foo().bar().baz()
+        m.one().two().three()
+        calls = call.one().two().three().call_list()
+        m.assert_has_calls(calls)
+
+
     def test_assert_has_calls_with_function_spec(self):
         def f(a, b, c, d=None):
             pass
@@ -1346,6 +1395,32 @@ class MockTest(unittest.TestCase):
             mock.assert_has_calls(calls[:-1])
         mock.assert_has_calls(calls[:-1], any_order=True)
 
+    def test_assert_has_calls_not_matching_spec_error(self):
+        def f(x=None): pass
+
+        mock = Mock(spec=f)
+        mock(1)
+
+        with self.assertRaisesRegex(
+                AssertionError,
+                '^{}$'.format(
+                    re.escape('Calls not found.\n'
+                              'Expected: [call()]\n'
+                              'Actual: [call(1)]'))) as cm:
+            mock.assert_has_calls([call()])
+        self.assertIsNone(cm.exception.__cause__)
+
+
+        with self.assertRaisesRegex(
+                AssertionError,
+                '^{}$'.format(
+                    re.escape(
+                        'Error processing expected calls.\n'
+                        "Errors: [None, TypeError('too many positional arguments')]\n"
+                        "Expected: [call(), call(1, 2)]\n"
+                        'Actual: [call(1)]'))) as cm:
+            mock.assert_has_calls([call(), call(1, 2)])
+        self.assertIsInstance(cm.exception.__cause__, TypeError)
 
     def test_assert_any_call(self):
         mock = Mock()
@@ -1786,6 +1861,35 @@ class MockTest(unittest.TestCase):
             self.assertEqual(mock_func.mock_calls, child_calls)
             self.assertIn('mock.child', repr(parent.child.mock))
             self.assertEqual(mock_func.mock._extract_mock_name(), 'mock.child')
+
+
+    def test_attach_mock_patch_autospec_signature(self):
+        with mock.patch(f'{__name__}.Something.meth', autospec=True) as mocked:
+            manager = Mock()
+            manager.attach_mock(mocked, 'attach_meth')
+            obj = Something()
+            obj.meth(1, 2, 3, d=4)
+            manager.assert_has_calls([call.attach_meth(mock.ANY, 1, 2, 3, d=4)])
+            obj.meth.assert_has_calls([call(mock.ANY, 1, 2, 3, d=4)])
+            mocked.assert_has_calls([call(mock.ANY, 1, 2, 3, d=4)])
+
+        with mock.patch(f'{__name__}.something', autospec=True) as mocked:
+            manager = Mock()
+            manager.attach_mock(mocked, 'attach_func')
+            something(1)
+            manager.assert_has_calls([call.attach_func(1)])
+            something.assert_has_calls([call(1)])
+            mocked.assert_has_calls([call(1)])
+
+        with mock.patch(f'{__name__}.Something', autospec=True) as mocked:
+            manager = Mock()
+            manager.attach_mock(mocked, 'attach_obj')
+            obj = Something()
+            obj.meth(1, 2, 3, d=4)
+            manager.assert_has_calls([call.attach_obj(),
+                                      call.attach_obj().meth(1, 2, 3, d=4)])
+            obj.meth.assert_has_calls([call(1, 2, 3, d=4)])
+            mocked.assert_has_calls([call(), call().meth(1, 2, 3, d=4)])
 
 
     def test_attribute_deletion(self):
