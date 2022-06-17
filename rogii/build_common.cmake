@@ -64,7 +64,7 @@ endif()
 
 set(
     PACKAGE_NAME
-    "python-3.7.4-${ARCH}-${BUILD}${TAG}"
+    "python-3.7.13-${ARCH}-${BUILD}${TAG}"
 )
 
 set(
@@ -135,7 +135,7 @@ if(WIN32)
         COMMAND
             "${BUILD_DIRECTORY}/${FOLDER_ARCH}/python.exe" mkstd.py
         WORKING_DIRECTORY
-            "${CMAKE_CURRENT_LIST_DIR}/.."
+            "${CMAKE_CURRENT_LIST_DIR}/"
     )
     execute_process(
         COMMAND
