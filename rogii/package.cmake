@@ -65,6 +65,7 @@ if(WIN32)
 				${PYTHON_BINDIR}/_sqlite3.pyd
 				${PYTHON_BINDIR}/_ssl.pyd
 				${PYTHON_BINDIR}/_tkinter.pyd
+				${PYTHON_BINDIR}/_queue.pyd
 				${PYTHON_BINDIR}/pyshellext.dll
 				${PYTHON_BINDIR}/sqlite3.dll
 				${PYTHON_BINDIR}/tcl86t.dll
