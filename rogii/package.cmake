@@ -136,3 +136,28 @@ elseif(UNIX)
 	endforeach()
 
 endif()
+
+if(TARGET Python::binary)
+    return()
+endif()
+
+add_executable(
+    Python::binary
+    IMPORTED
+)
+
+if(WIN32)
+    set_target_properties(
+        Python::binary
+        PROPERTIES
+            IMPORTED_LOCATION
+            ${CMAKE_CURRENT_LIST_DIR}/Python37/python.exe
+    )
+elseif(UNIX)
+    set_target_properties(
+        Python::binary
+        PROPERTIES
+            IMPORTED_LOCATION
+            ${CMAKE_CURRENT_LIST_DIR}/bin/python3.7
+    )
+endif()
