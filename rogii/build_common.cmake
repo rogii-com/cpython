@@ -62,6 +62,10 @@ elseif(UNIX)
     )
 endif()
 
+include(
+    "${CMAKE_CURRENT_LIST_DIR}/Version.cmake"
+)
+
 set(
     PACKAGE_NAME
     "python-${Python_VERSION}-${ARCH}-${BUILD}${TAG}"
@@ -122,7 +126,7 @@ elseif(UNIX)
             "${CMAKE_CURRENT_SOURCE_DIR}"
     )
 endif()
-
+return()
 if(DEFINED ENV{TAG})
     set(
         TAG
@@ -139,13 +143,13 @@ if(WIN32)
     )
     execute_process(
         COMMAND
-            7z.exe a -r -tzip ../python310.zip *.pyc -x!__pycache__ -x!test -x!ensurepip -x!idlelib -x!venv -x!tests -x!tkinter -x!turtle* -aou
+            7z.exe a -r -tzip ../python${Python_VERSION_MAJOR}${Python_VERSION_MINOR}.zip *.pyc -x!__pycache__ -x!test -x!ensurepip -x!idlelib -x!venv -x!tests -x!tkinter -x!turtle* -aou
         WORKING_DIRECTORY
             "${CMAKE_CURRENT_LIST_DIR}/../Lib"
     )
     file(
         COPY
-            python310.zip
+            python${Python_VERSION_MAJOR}${Python_VERSION_MINOR}.zip
         DESTINATION
             "${CMAKE_INSTALL_PREFIX}"
     )
