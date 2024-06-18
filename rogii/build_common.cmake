@@ -126,7 +126,7 @@ elseif(UNIX)
             "${CMAKE_CURRENT_SOURCE_DIR}"
     )
 endif()
-return()
+
 if(DEFINED ENV{TAG})
     set(
         TAG
@@ -181,7 +181,7 @@ if(WIN32)
 elseif(UNIX)
     execute_process(
         COMMAND
-            chmod +w ${ROOT}/${PACKAGE_NAME}/lib/libpython3.10m.so.1.0
+            chmod +w ${ROOT}/${PACKAGE_NAME}/lib/libpython${Python_VERSION_MAJOR}.${Python_VERSION_MINOR}.so.1.0
         COMMAND
             chmod +w ${ROOT}/${PACKAGE_NAME}/lib/libpython3.so
         WORKING_DIRECTORY
@@ -189,7 +189,7 @@ elseif(UNIX)
     )
     execute_process(
         COMMAND
-            ./utils/split_debug_info.sh ${ROOT}/${PACKAGE_NAME}/lib/libpython3.10m.so.1.0
+            ./utils/split_debug_info.sh ${ROOT}/${PACKAGE_NAME}/lib/libpython${Python_VERSION_MAJOR}.${Python_VERSION_MINOR}.so.1.0
         COMMAND
             ./utils/split_debug_info.sh ${ROOT}/${PACKAGE_NAME}/lib/libpython3.so
         WORKING_DIRECTORY
@@ -197,7 +197,7 @@ elseif(UNIX)
     )
     execute_process(
         COMMAND
-            chmod -w ${ROOT}/${PACKAGE_NAME}/lib/libpython3.10m.so.1.0
+            chmod -w ${ROOT}/${PACKAGE_NAME}/lib/libpython${Python_VERSION_MAJOR}.${Python_VERSION_MINOR}.so.1.0
         COMMAND
             chmod -w ${ROOT}/${PACKAGE_NAME}/lib/libpython3.so
         WORKING_DIRECTORY
