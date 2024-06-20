@@ -81,9 +81,9 @@ elseif(UNIX)
 		Python::library
 		PROPERTIES
 			IMPORTED_LOCATION
-				"${CMAKE_CURRENT_LIST_DIR}/lib/libpython3.10m.so.1.0"
+				"${CMAKE_CURRENT_LIST_DIR}/lib/libpython3.12.so.1.0"
 			INTERFACE_INCLUDE_DIRECTORIES
-				"${CMAKE_CURRENT_LIST_DIR}/include/python3.10m"
+				"${CMAKE_CURRENT_LIST_DIR}/include/python3.12"
 	)
 	set(
 		COMPONENT_NAMES
@@ -111,7 +111,7 @@ elseif(UNIX)
 			IMPORTED_LOCATION
 				"${CMAKE_CURRENT_LIST_DIR}/lib/libpython3.so"
 			INTERFACE_INCLUDE_DIRECTORIES
-				"${CMAKE_CURRENT_LIST_DIR}/include/python3.10m"
+				"${CMAKE_CURRENT_LIST_DIR}/include/python3.12"
 	)
 	set(
 		COMPONENT_NAMES
