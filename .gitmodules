@@ -1,0 +1,3 @@
+[submodule "rogii/utils"]
+	path = rogii/utils
+	url = https://github.com/rogii-com/cmake-utils

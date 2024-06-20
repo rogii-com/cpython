@@ -107,15 +107,19 @@ elseif(UNIX)
         ENV{CFLAGS}
         -O2 -ggdb
     )
+    set(
+        ENV{LDFLAGS}
+        "-Wl,--enable-new-dtags -Wl,-rpath,\\$\$ORIGIN/ -Wl,-rpath,\\$\$ORIGIN/../lib"
+    )
     execute_process(
         COMMAND
-            ./configure --prefix=${CMAKE_INSTALL_PREFIX} --enable-shared --with-system-expat=no --with-system-ffi=no --with-system-libmpdec=no --with-universal-archs=${BUILD_ARCH}
+         ./configure --prefix=${CMAKE_INSTALL_PREFIX} --enable-shared --with-system-expat=no --with-system-ffi=no --with-system-libmpdec=no --with-universal-archs=${BUILD_ARCH}
         WORKING_DIRECTORY
             "${CMAKE_CURRENT_SOURCE_DIR}"
     )
     execute_process(
         COMMAND
-            make
+            make -j
         WORKING_DIRECTORY
             "${CMAKE_CURRENT_SOURCE_DIR}"
     )
@@ -126,7 +130,7 @@ elseif(UNIX)
             "${CMAKE_CURRENT_SOURCE_DIR}"
     )
 endif()
-
+return()
 if(DEFINED ENV{TAG})
     set(
         TAG
