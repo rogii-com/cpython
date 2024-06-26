@@ -65,6 +65,7 @@ if(WIN32)
 				${PYTHON_BINDIR}/_sqlite3.pyd
 				${PYTHON_BINDIR}/_ssl.pyd
 				${PYTHON_BINDIR}/_tkinter.pyd
+				${PYTHON_BINDIR}/_queue.pyd
 				${PYTHON_BINDIR}/pyshellext.dll
 				${PYTHON_BINDIR}/sqlite3.dll
 				${PYTHON_BINDIR}/tcl86t.dll
@@ -134,4 +135,29 @@ elseif(UNIX)
 		)
 	endforeach()
 
+endif()
+
+if(TARGET Python::binary)
+    return()
+endif()
+
+add_executable(
+    Python::binary
+    IMPORTED
+)
+
+if(WIN32)
+    set_target_properties(
+        Python::binary
+        PROPERTIES
+            IMPORTED_LOCATION
+            ${CMAKE_CURRENT_LIST_DIR}/bin/python.exe
+    )
+elseif(UNIX)
+    set_target_properties(
+        Python::binary
+        PROPERTIES
+            IMPORTED_LOCATION
+            ${CMAKE_CURRENT_LIST_DIR}/bin/python3.12
+    )
 endif()
