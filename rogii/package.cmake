@@ -71,6 +71,8 @@ if(WIN32)
 				${PYTHON_BINDIR}/sqlite3.dll
 				${PYTHON_BINDIR}/tcl86t.dll
 				${PYTHON_BINDIR}/tk86t.dll
+				${PYTHON_BINDIR}/libcrypto-3.dll
+				${PYTHON_BINDIR}/libssl-3.dll
 			DESTINATION
 				.
 			COMPONENT
