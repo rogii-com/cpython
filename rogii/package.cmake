@@ -73,6 +73,7 @@ if(WIN32)
 				${PYTHON_BINDIR}/tk86t.dll
 				${PYTHON_BINDIR}/libcrypto-3.dll
 				${PYTHON_BINDIR}/libssl-3.dll
+				${PYTHON_BINDIR}/zlib1.dll
 			DESTINATION
 				.
 			COMPONENT
