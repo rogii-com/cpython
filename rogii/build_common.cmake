@@ -147,7 +147,7 @@ if(WIN32)
     )
     execute_process(
         COMMAND
-            7z.exe a -r -tzip ../python${Python_VERSION_MAJOR}${Python_VERSION_MINOR}.zip *.pyc -x!__pycache__ -x!test -x!ensurepip -x!idlelib -x!venv -x!tests -x!tkinter -x!turtle* -aou
+            7z.exe a -r -tzip ../python${Python_VERSION_MAJOR}${Python_VERSION_MINOR}.zip *.pyc -x!__pycache__ -x!test -x!ensurepip -x!idlelib -x!venv -x!tests -x!turtle* -aou
         WORKING_DIRECTORY
             "${CMAKE_CURRENT_LIST_DIR}/../Lib"
     )
