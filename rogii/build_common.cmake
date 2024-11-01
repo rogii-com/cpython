@@ -182,6 +182,18 @@ if(WIN32)
         DESTINATION
             "${ROOT}/${PACKAGE_NAME}/bin"
     )
+    file(
+        COPY
+            "${CMAKE_CURRENT_LIST_DIR}/../externals/tcltk-8.6.13.0/amd64/lib/tcl8.6"
+        DESTINATION
+            "${ROOT}/${PACKAGE_NAME}/tcltk-8.6"
+    )
+    file(
+        COPY
+            "${CMAKE_CURRENT_LIST_DIR}/../externals/tcltk-8.6.13.0/amd64/lib/tk8.6"
+        DESTINATION
+            "${ROOT}/${PACKAGE_NAME}/tcltk-8.6"
+    )
 elseif(UNIX)
     execute_process(
         COMMAND
