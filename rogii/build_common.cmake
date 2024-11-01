@@ -95,13 +95,6 @@ if(WIN32)
         WORKING_DIRECTORY
             "${BUILD_DIRECTORY}"
     )
-    execute_process(
-        COMMAND
-            cmd /C "${BUILD_DIRECTORY}/build.bat -c Debug -p ${BUILD_ARCH} ${MSBUILD_PARAMS}"
-        WORKING_DIRECTORY
-            "${BUILD_DIRECTORY}"
-    )
-	
 elseif(UNIX)
     set(
         ENV{CFLAGS}
