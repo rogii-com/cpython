@@ -10,7 +10,7 @@ set(
 
 set(
     Python_VERSION_PATCH
-    4
+    7
 )
 
 set(
