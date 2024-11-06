@@ -147,7 +147,7 @@ if(WIN32)
     )
     execute_process(
         COMMAND
-            7z.exe a -r -tzip ../python${Python_VERSION_MAJOR}${Python_VERSION_MINOR}.zip *.pyc -x!__pycache__ -x!test -x!ensurepip -x!idlelib -x!venv -x!tests -x!tkinter -x!turtle* -aou
+            7z.exe a -r -tzip ../python${Python_VERSION_MAJOR}${Python_VERSION_MINOR}.zip *.pyc -x!__pycache__ -x!test -x!ensurepip -x!idlelib -x!venv -x!tests -x!turtle* -aou
         WORKING_DIRECTORY
             "${CMAKE_CURRENT_LIST_DIR}/../Lib"
     )
@@ -181,6 +181,19 @@ if(WIN32)
             ${BUILD_DIRECTORY}/${FOLDER_ARCH}/
         DESTINATION
             "${ROOT}/${PACKAGE_NAME}/bin"
+    )
+    # Copy Tcl\Tk scripts
+    file(
+        COPY
+            "${CMAKE_CURRENT_LIST_DIR}/../externals/tcltk-8.6.13.0/amd64/lib/tcl8.6"
+        DESTINATION
+            "${ROOT}/${PACKAGE_NAME}/tcl"
+    )
+    file(
+        COPY
+            "${CMAKE_CURRENT_LIST_DIR}/../externals/tcltk-8.6.13.0/amd64/lib/tk8.6"
+        DESTINATION
+            "${ROOT}/${PACKAGE_NAME}/tcl"
     )
 elseif(UNIX)
     execute_process(

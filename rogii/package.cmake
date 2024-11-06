@@ -32,6 +32,7 @@ if(WIN32)
 	link_directories(${CMAKE_CURRENT_LIST_DIR}/bin)
 	set (PYTHON_BINDIR ${CMAKE_CURRENT_LIST_DIR}/bin/)
 	set (PYTHON_LIB ${CMAKE_CURRENT_LIST_DIR}/python312.zip)
+	set (PYTHON_TCL_TK_DIR ${CMAKE_CURRENT_LIST_DIR}/tcl)
 
 	set(
 		COMPONENT_NAMES
@@ -80,6 +81,7 @@ if(WIN32)
 				${COMPONENT_NAME}
 			EXCLUDE_FROM_ALL
 		)
+		install(DIRECTORY ${PYTHON_TCL_TK_DIR} DESTINATION . COMPONENT ${COMPONENT_NAME})
 	endforeach()
 elseif(UNIX)
 	set_target_properties(
