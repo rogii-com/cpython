@@ -5,10 +5,10 @@ set(
 
 set(
     MSVS_VCTOOLS_VERSION
-    14.33.31629
+    14.42.34433
 )
 
 set(
     MSVS_SDK_VERSION
-    10.0.20348.0
+    10.0.22621.0
 )
