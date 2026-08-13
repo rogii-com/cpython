@@ -185,13 +185,13 @@ if(WIN32)
     # Copy Tcl\Tk scripts
     file(
         COPY
-            "${CMAKE_CURRENT_LIST_DIR}/../externals/tcltk-8.6.13.0/amd64/lib/tcl8.6"
+            "${CMAKE_CURRENT_LIST_DIR}/../externals/tcltk-8.6.15.2/amd64/lib/tcl8.6"
         DESTINATION
             "${ROOT}/${PACKAGE_NAME}/tcl"
     )
     file(
         COPY
-            "${CMAKE_CURRENT_LIST_DIR}/../externals/tcltk-8.6.13.0/amd64/lib/tk8.6"
+            "${CMAKE_CURRENT_LIST_DIR}/../externals/tcltk-8.6.15.2/amd64/lib/tk8.6"
         DESTINATION
             "${ROOT}/${PACKAGE_NAME}/tcl"
     )
