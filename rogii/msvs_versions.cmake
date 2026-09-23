@@ -1,14 +1,14 @@
 set(
     MSVS_YEAR_VERSION
-    2022
+    18
 )
 
 set(
     MSVS_VCTOOLS_VERSION
-    14.42.34433
+    14.51.36231
 )
 
 set(
     MSVS_SDK_VERSION
-    10.0.22621.0
+    10.0.26100.0
 )
