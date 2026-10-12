@@ -29,6 +29,21 @@ if(WIN32)
 				"${CMAKE_CURRENT_LIST_DIR}/include"
 	)
 
+	set_target_properties(
+		Python::legacy
+		PROPERTIES
+			IMPORTED_LOCATION
+				"${CMAKE_CURRENT_LIST_DIR}/bin/python3.dll"
+			IMPORTED_LOCATION_DEBUG
+				"${CMAKE_CURRENT_LIST_DIR}/bin/python3.dll"
+			IMPORTED_IMPLIB
+				"${CMAKE_CURRENT_LIST_DIR}/bin/python3.lib"
+			IMPORTED_IMPLIB_DEBUG
+				"${CMAKE_CURRENT_LIST_DIR}/bin/python3.lib"
+			INTERFACE_INCLUDE_DIRECTORIES
+				"${CMAKE_CURRENT_LIST_DIR}/include"
+	)
+
 	link_directories(${CMAKE_CURRENT_LIST_DIR}/bin)
 	set (PYTHON_BINDIR ${CMAKE_CURRENT_LIST_DIR}/bin/)
 	set (PYTHON_LIB ${CMAKE_CURRENT_LIST_DIR}/python312.zip)
