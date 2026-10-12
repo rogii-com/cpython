@@ -89,18 +89,26 @@ if(WIN32)
     message (
         "cmd /C ${BUILD_DIRECTORY}\\build.bat -c Release -p ${BUILD_ARCH}"
     )
-    execute_process(
-        COMMAND
-            cmd /C "${BUILD_DIRECTORY}/build.bat -c Release -p ${BUILD_ARCH} ${MSBUILD_PARAMS}"
-        WORKING_DIRECTORY
-            "${BUILD_DIRECTORY}"
+    foreach(
+        CONFIGURATION
+        Release
+        Debug
     )
-    execute_process(
-        COMMAND
-            cmd /C "${BUILD_DIRECTORY}/build.bat -c Debug -p ${BUILD_ARCH} ${MSBUILD_PARAMS}"
-        WORKING_DIRECTORY
-            "${BUILD_DIRECTORY}"
-    )
+        execute_process(
+            COMMAND
+                cmd /C "${BUILD_DIRECTORY}/build.bat -c ${CONFIGURATION} -p ${BUILD_ARCH} ${MSBUILD_PARAMS}"
+            WORKING_DIRECTORY
+                "${BUILD_DIRECTORY}"
+            RESULT_VARIABLE
+                BUILD_RESULT
+        )
+        if(NOT BUILD_RESULT EQUAL 0)
+            message(
+                FATAL_ERROR
+                "build.bat -c ${CONFIGURATION} -p ${BUILD_ARCH} failed: ${BUILD_RESULT}"
+            )
+        endif()
+    endforeach()
 	
 elseif(UNIX)
     set(
