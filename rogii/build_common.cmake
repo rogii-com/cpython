@@ -82,6 +82,47 @@ set(
 )
 
 if(WIN32)
+    # PCbuild/find_python.bat takes externals/pythonx86 first and otherwise installs the latest
+    # pythonx86 from nuget; pythonx86 3.15 can no longer run the 3.12 regen scripts.
+    set(
+        HOST_PYTHON_VERSION
+        3.14.7
+    )
+    set(
+        HOST_PYTHON_DIR
+        "${CMAKE_CURRENT_LIST_DIR}/../externals/pythonx86"
+    )
+    set(
+        HOST_PYTHON_ARCHIVE
+        "${CMAKE_CURRENT_LIST_DIR}/../externals/pythonx86.${HOST_PYTHON_VERSION}.nupkg"
+    )
+    file(
+        DOWNLOAD
+            "https://api.nuget.org/v3-flatcontainer/pythonx86/${HOST_PYTHON_VERSION}/pythonx86.${HOST_PYTHON_VERSION}.nupkg"
+            "${HOST_PYTHON_ARCHIVE}"
+        EXPECTED_HASH
+            SHA512=d2bb139210513ab54821e82969131cadde68a86d8e2ed7d27cb747cf8aeb855e4e6d34261f5e86d1a7d7e68e773760e8a14970d6e426a67a3a4df27a89e341e5
+        TLS_VERIFY
+            ON
+    )
+    file(
+        REMOVE_RECURSE
+            "${HOST_PYTHON_DIR}"
+    )
+    file(
+        ARCHIVE_EXTRACT
+        INPUT
+            "${HOST_PYTHON_ARCHIVE}"
+        DESTINATION
+            "${HOST_PYTHON_DIR}"
+    )
+    if(NOT EXISTS "${HOST_PYTHON_DIR}/tools/python.exe")
+        message(
+            FATAL_ERROR
+            "pythonx86 ${HOST_PYTHON_VERSION} has no tools/python.exe"
+        )
+    endif()
+
     set(
         MSBUILD_PARAMS
         "-v:n"
@@ -89,18 +130,26 @@ if(WIN32)
     message (
         "cmd /C ${BUILD_DIRECTORY}\\build.bat -c Release -p ${BUILD_ARCH}"
     )
-    execute_process(
-        COMMAND
-            cmd /C "${BUILD_DIRECTORY}/build.bat -c Release -p ${BUILD_ARCH} ${MSBUILD_PARAMS}"
-        WORKING_DIRECTORY
-            "${BUILD_DIRECTORY}"
+    foreach(
+        CONFIGURATION
+        Release
+        Debug
     )
-    execute_process(
-        COMMAND
-            cmd /C "${BUILD_DIRECTORY}/build.bat -c Debug -p ${BUILD_ARCH} ${MSBUILD_PARAMS}"
-        WORKING_DIRECTORY
-            "${BUILD_DIRECTORY}"
-    )
+        execute_process(
+            COMMAND
+                cmd /C "${BUILD_DIRECTORY}/build.bat -c ${CONFIGURATION} -p ${BUILD_ARCH} ${MSBUILD_PARAMS}"
+            WORKING_DIRECTORY
+                "${BUILD_DIRECTORY}"
+            RESULT_VARIABLE
+                BUILD_RESULT
+        )
+        if(NOT BUILD_RESULT EQUAL 0)
+            message(
+                FATAL_ERROR
+                "build.bat -c ${CONFIGURATION} -p ${BUILD_ARCH} failed: ${BUILD_RESULT}"
+            )
+        endif()
+    endforeach()
 	
 elseif(UNIX)
     set(
